@@ -1,0 +1,119 @@
+<Window x:Class="CountriesWPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:syncfusion="http://schemas.syncfusion.com/wpf"          
+        xmlns:local="clr-namespace:CountriesWPF" xmlns:wv2="clr-namespace:Microsoft.Web.WebView2.Wpf;assembly=Microsoft.Web.WebView2.Wpf"
+        Title="WWCD - World Wide Countries Data" Height="740" Width="800" Icon="App.ico">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibilityConverter" />
+        <local:InverseBoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" />
+    </Window.Resources>
+    <Window.DataContext>
+        <local:MainWindowViewModel />
+    </Window.DataContext>
+    <Grid>
+        <!-- First Row -->
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="300"/>
+        </Grid.RowDefinitions>
+
+        <!-- Card start -->
+        <Border Grid.Row="0" Width="700" Height="300" Background="#2C2C2C" CornerRadius="4" Margin="0,20,0,10">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <!-- Header -->
+                <Border Background="#1C1C1C" Grid.ColumnSpan="2" CornerRadius="4,4,0,0">
+                    <TextBlock x:Name="CountryNameHeader" Grid.ColumnSpan="2" Text="" Foreground="White" FontSize="18" FontWeight="Bold" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="10"/>
+                </Border>
+
+                <!-- Image -->
+                <Image Grid.Row="1" Grid.Column="0" x:Name="CountryFlag" Source="{Binding Path=SelectedCountryFlag, Mode=OneWay}" Stretch="Fill" Width="320" Height="213" HorizontalAlignment="Center" Margin="10"/>
+
+                <!-- Details -->
+                <StackPanel Grid.Row="1" Grid.Column="1" Margin="10, 0, 10, 10">
+                    <TextBlock Text="" FontSize="14" Margin="0,0,0,10" />
+                    <TextBlock x:Name="CountryName" Text="" FontSize="14" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="CountryCapital" Text="" FontSize="14" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="CountryRegion" Text="" FontSize="14" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="CountrySubRegion" Text="" FontSize="14" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="CountryArea" Text="" FontSize="14" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="CountryPopulation" Text="" FontSize="14" Margin="0,0,0,10"/>
+                    <TextBlock x:Name="CountryGini" Text="" FontSize="14" Margin="0,0,0,10"/>
+                </StackPanel>
+
+            </Grid>
+        </Border>
+        <!-- Card end -->
+
+        <!-- First Row - Three Columns -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="700"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <syncfusion:ComboBoxAdv x:Name="ComboCountries" IsEditable="True" AutoCompleteMode="Suggest"
+                                    Visibility="{Binding IsLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}" 
+                                    Grid.Column="1" AllowMultiSelect="False" DefaultText="Select a country.." Height="30" Width="700" 
+                                    ItemsSource="{Binding CountryNames}" SelectionChanged="ComboCountries_SelectionChanged" 
+                                    SelectedItem="{Binding SelectedCountry}" />
+            
+
+            <syncfusion:SfLinearProgressBar x:Name="ProgressCountries"
+                                IndicatorCornerRadius="10"
+                                Grid.Column="1"
+                                Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"
+                                Height="30"                                
+                                Width="700"
+                                Progress="{Binding ProgressValue}" />
+
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
+            <!-- Content for the third row -->
+        </Grid>
+
+        <!-- Fourth Row - Three Columns -->
+        <Grid Grid.Row="3">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Content for the fourth row -->
+            <TextBlock Grid.Column="1" x:Name="LoadingSource" Margin="0,10,0,0" Visibility="{Binding IsLoading, Converter={StaticResource InverseBoolToVisibilityConverter}}"/>
+            <TextBlock Grid.Column="1" Text="Loading Countries..." Margin="0,10,0,0" Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        </Grid>
+
+        <!-- New Row - WebView2 -->
+        <Grid Grid.Row="4">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="50"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="50"/>
+            </Grid.ColumnDefinitions>
+            
+            <!-- Content for the WebView2 row -->
+            <wv2:WebView2 Name="webView" Grid.Column="1" />
+        </Grid>
+
+    </Grid>
+</Window>
