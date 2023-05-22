@@ -87,8 +87,9 @@ namespace CountriesWPF
         private async void LoadCountriesAsync()
         {            
             var connection = networkService.CheckConnection();
+            var apiconnection = await networkService.CheckApiConnection("https://restcountries.coam/v3.1/all");
 
-            if (!connection.IsSuccess)
+            if (!connection.IsSuccess || !apiconnection.IsSuccess)
             {
                 LoadLocalCountries();
                 loadAPI = false;
